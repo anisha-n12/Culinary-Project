@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:culinary_project/service/database_service.dart';
 import 'package:culinary_project/shared/constants.dart';
 import 'package:culinary_project/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -12,11 +13,16 @@ class AddProduct extends StatefulWidget {
 
 class _AddProductState extends State<AddProduct> {
   File? _image;
+  String productName = "";
+  String category = "";
+  String description = "";
+  String quantity = "";
+  String price = "";
   final picker = ImagePicker(); // Image picker instance
   List<String> _selectedCategories = [];
 
   Future<void> _pickImage() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.camera);
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     setState(() {
       if (pickedFile != null) {
@@ -74,6 +80,9 @@ class _AddProductState extends State<AddProduct> {
               ),
               SizedBox(height: 20),
               TextFormField(
+                onChanged: (value) {
+                  productName = value;
+                },
                 decoration: textInputDecoration.copyWith(
                   labelText: 'Product Name',
                   hintText: 'Enter product name',
@@ -81,6 +90,9 @@ class _AddProductState extends State<AddProduct> {
               ),
               SizedBox(height: 20),
               TextFormField(
+                onChanged: (value) {
+                  description = value;
+                },
                 decoration: textInputDecoration.copyWith(
                   labelText: 'Description',
                   hintText: 'Enter description',
@@ -89,6 +101,9 @@ class _AddProductState extends State<AddProduct> {
               ),
               SizedBox(height: 20),
               TextFormField(
+                onChanged: (value) {
+                  price = value;
+                },
                 decoration: textInputDecoration.copyWith(
                   labelText: 'Price',
                   hintText: 'Enter price in Indian rupees',
@@ -97,6 +112,9 @@ class _AddProductState extends State<AddProduct> {
               ),
               SizedBox(height: 20),
               TextFormField(
+                onChanged: (value) {
+                  quantity = value;
+                },
                 decoration: textInputDecoration.copyWith(
                   labelText: 'Quantity',
                   hintText: 'Enter quantity',
@@ -140,6 +158,15 @@ class _AddProductState extends State<AddProduct> {
               ElevatedButton(
                 onPressed: () {
                   // Add logic to submit product details
+                  DatabaseService.addProduct(
+                      context,
+                      productName,
+                      _image,
+                      description,
+                      DatabaseService.currdocid,
+                      price,
+                      quantity,
+                      _selectedCategories);
                 },
                 child: Text('Submit'),
                 style: ElevatedButton.styleFrom(

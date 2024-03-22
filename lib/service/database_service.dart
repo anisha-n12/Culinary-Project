@@ -15,48 +15,38 @@ class DatabaseService {
   static String currusername = "";
   static String currpassword = "";
   static String currdocid = "";
-  Future<void> addProduct(
+
+  static Future<void> addProduct(
+    BuildContext context,
     String productName,
-    String imageUrl,
+    File? imagefile,
     String description,
     String sellerId,
-    double price,
-    int quantity,
+    String price,
+    String quantity,
+    List<String> categories, // Add list of categories parameter
   ) async {
     try {
       final CollectionReference productCollection =
-          _firestore.collection("productCollection");
-
-      // Start a Firestore transaction
-      await _firestore.runTransaction((transaction) async {
-        // Get the document reference for the Sales_Admin document
-        final DocumentReference adminDocRef = _firestore
-            .collection("Sales_Admin")
-            .doc(); // No document ID provided
-
-        // Get the current value of no_product field
-        final DocumentSnapshot adminSnapshot =
-            await transaction.get(adminDocRef);
-        final int currentNoProducts =
-            (adminSnapshot.data() as Map<String, dynamic>)['no_product'] ?? 0;
-
-        // Update the no_product field by incrementing it by 1
-        transaction.update(adminDocRef, {'no_product': currentNoProducts + 1});
-
-        // Add product information to Firestore
-        await productCollection.add({
-          "productName": productName,
-          "imageUrl": imageUrl,
-          "description": description,
-          "sellerId": sellerId,
-          "price": price,
-          "quantity": quantity,
-        });
+          _firestore.collection("productcollection");
+      String imageUrl = '';
+      if (imagefile != null) {
+        imageUrl = await _uploadImageToStorage(imagefile);
+      }
+      await productCollection.add({
+        "productName": productName,
+        "imageUrl": imageUrl,
+        "description": description,
+        "sellerId": sellerId,
+        "price": price,
+        "quantity": quantity,
+        "categories": categories, // Add categories to the product data
       });
-
-      print("Product added successfully!");
+      showSnackBar(context, Colors.green, "Product added successfully!");
+      nextScreen(context, SellerHome());
     } catch (e) {
-      print("There was an issue adding the product: $e");
+      showSnackBar(
+          context, Colors.red, "There was an issue adding the product: $e");
       // Handle the error as needed
     }
   }
@@ -100,7 +90,8 @@ class DatabaseService {
         // Store user role in Firestore
         await _firestore.collection('users').doc(userCredential.user!.uid).set({
           'email': userCredential.user!.email,
-          'role': "Buyer", // or 'home' based on your categories000000000000000000000000000
+          'role':
+              "Buyer", // or 'home' based on your categories000000000000000000000000000
         });
       } catch (e) {
         print("Error creating user: $e");
@@ -144,7 +135,7 @@ class DatabaseService {
     if (roleinData == 'Buyer' && role == "Buyer") {
       QuerySnapshot querySnapshot = await _firestore
           .collection('buyerCollection')
-          .where('loginId', isEqualTo: userDoc['email'])
+          .where('loginID', isEqualTo: userDoc['email'])
           .get();
       if (querySnapshot.docs.isNotEmpty) {
         currdocid = querySnapshot.docs.first.id;
@@ -153,7 +144,7 @@ class DatabaseService {
     } else if (roleinData == 'Seller' && role == "Seller") {
       QuerySnapshot querySnapshot = await _firestore
           .collection('sellerCollection')
-          .where('loginId', isEqualTo: userDoc['email'])
+          .where('loginID', isEqualTo: userDoc['email'])
           .get();
       if (querySnapshot.docs.isNotEmpty) {
         currdocid = querySnapshot.docs.first.id;
@@ -168,6 +159,7 @@ class DatabaseService {
   }
 
   Future<void> addSeller(
+    BuildContext context,
     String name,
     String businessName,
     String description,
@@ -193,17 +185,6 @@ class DatabaseService {
         imageUrl = await _uploadImageToStorage(imageFile);
       }
 
-      // Update the no_user field of Sales_Admin document by incrementing it by 1
-      await _firestore.runTransaction((transaction) async {
-        final DocumentReference adminDocRef =
-            _firestore.collection("Sales_Admin").doc();
-        final DocumentSnapshot adminSnapshot =
-            await transaction.get(adminDocRef);
-        final int currentNoUsers =
-            (adminSnapshot.data() as Map<String, dynamic>)['no_user'] ?? 0;
-        transaction.update(adminDocRef, {'no_user': currentNoUsers + 1});
-      });
-
       // Add seller information to Firestore
       await sellerCollection.add({
         "name": name,
@@ -221,25 +202,28 @@ class DatabaseService {
         "password": password,
         "image_url": imageUrl, // Add image URL to Firestore
       });
-      // try {
-      //   UserCredential userCredential =
-      //       await _auth.createUserWithEmailAndPassword(
-      //     email: username,
-      //     password: password,
-      //   );
+      try {
+        UserCredential userCredential =
+            await _auth.createUserWithEmailAndPassword(
+          email: username,
+          password: password,
+        );
 
-      //   // Store user role in Firestore
-      //   await _firestore.collection('users').doc(userCredential.user!.uid).set({
-      //     'email': userCredential.user!.email,
-      //     'role': RecOrWar, // or 'home' based on your categories
-      //   });
-      // } catch (e) {
-      //   print("Error creating user: $e");
-      // }
-      print(
-          "Congratulations! You've successfully registered as a Seller on Snack Shack!");
+        // Store user role in Firestore
+        await _firestore.collection('users').doc(userCredential.user!.uid).set({
+          'email': userCredential.user!.email,
+          'role':
+              "Seller", // or 'home' based on your categories000000000000000000000000000
+        });
+      } catch (e) {
+        print("Error creating user: $e");
+      }
+
+      showSnackBar(context, Colors.green, "Seller registration Successfull!");
     } catch (e) {
-      print("There was an issue adding your information as a Seller $e");
+      showSnackBar(context, Colors.green,
+          "There was an issue adding Seller information: $e");
+      print("There was an issue adding Seller information: $e");
       // Handle the error as needed
     }
   }
