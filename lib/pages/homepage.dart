@@ -1,3 +1,6 @@
+import 'package:culinary_project/pages/AddProduct.dart';
+import 'package:culinary_project/pages/AdminPage.dart';
+import 'package:culinary_project/pages/SellerPage.dart';
 import 'package:culinary_project/pages/SellerRegistration.dart';
 import 'package:culinary_project/pages/loginpage.dart';
 import 'package:culinary_project/pages/offergallery.dart';
@@ -42,7 +45,7 @@ class HomePage extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    nextScreen(context, Seller_Registration());
+                    nextScreen(context, AddProduct());
                   },
                   style: buttonStyle,
                   child: const Text(

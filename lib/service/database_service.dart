@@ -4,6 +4,41 @@ import 'dart:io';
 
 class DatabaseService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  Future<void> addBuyer(
+    String name,
+    String email,
+    String mobile,
+    String buildingNo,
+    String district,
+    String city,
+    String state,
+    String pinCode,
+  ) async {
+    try {
+      final CollectionReference buyerCollection =
+          _firestore.collection("buyerCollection");
+
+      // Add buyer information to Firestore
+      await buyerCollection.add({
+        "name": name,
+        "email": email,
+        "mobile": mobile,
+        "buildingNo": buildingNo,
+        "district": district,
+        "city": city,
+        "state": state,
+        "pinCode": pinCode,
+        "loginID": "",
+        "password": "",
+      });
+
+      print("Buyer information added successfully!");
+    } catch (e) {
+      print("There was an issue adding buyer information: $e");
+      // Handle the error as needed
+    }
+  }
+
   Future<void> addSeller(
     String name,
     String businessName,
