@@ -1,10 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:culinary_project/pages/AdminPage.dart';
+import 'package:culinary_project/pages/buyerhome.dart';
+import 'package:culinary_project/pages/sellerhome.dart';
+import 'package:culinary_project/widgets/widgets.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:io';
+
+import 'package:flutter/material.dart';
 
 class DatabaseService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
+  static final FirebaseAuth _auth = FirebaseAuth.instance;
+  static String currusername = "";
+  static String currpassword = "";
+  static String currdocid = "";
   Future<void> addProduct(
     String productName,
     String imageUrl,
@@ -51,16 +61,18 @@ class DatabaseService {
     }
   }
 
-  Future<void> addBuyer(
-    String name,
-    String email,
-    String mobile,
-    String buildingNo,
-    String district,
-    String city,
-    String state,
-    String pinCode,
-  ) async {
+  static Future<void> addBuyer(
+      BuildContext context,
+      String name,
+      String email,
+      String mobile,
+      String buildingNo,
+      String district,
+      String city,
+      String state,
+      String pinCode,
+      String username,
+      String password) async {
     try {
       final CollectionReference buyerCollection =
           _firestore.collection("buyerCollection");
@@ -75,14 +87,83 @@ class DatabaseService {
         "city": city,
         "state": state,
         "pinCode": pinCode,
-        "loginID": "",
-        "password": "",
+        "loginID": username,
+        "password": password,
       });
+      try {
+        UserCredential userCredential =
+            await _auth.createUserWithEmailAndPassword(
+          email: username,
+          password: password,
+        );
 
-      print("Buyer information added successfully!");
+        // Store user role in Firestore
+        await _firestore.collection('users').doc(userCredential.user!.uid).set({
+          'email': userCredential.user!.email,
+          'role': "Buyer", // or 'home' based on your categories000000000000000000000000000
+        });
+      } catch (e) {
+        print("Error creating user: $e");
+      }
+
+      showSnackBar(context, Colors.green, "Buyer registration Successfull!");
     } catch (e) {
+      showSnackBar(context, Colors.green,
+          "There was an issue adding buyer information: $e");
       print("There was an issue adding buyer information: $e");
       // Handle the error as needed
+    }
+  }
+
+  static Future<void> signInUser(
+      BuildContext context, String email, String password, String role) async {
+    try {
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      currusername = email;
+      currpassword = password;
+      _redirectUser(context, userCredential.user!, role);
+      showSnackBar(context, Colors.green, "Logged in successfully...");
+    } on FirebaseAuthException catch (e) {
+      print("Error signing in: $e");
+      // if (e.code == 'user-not-found' || e.code == 'wrong-password') {
+      showSnackBar(context, Colors.red, "Incorrect email or password...");
+      // }
+    }
+  }
+
+  static void _redirectUser(
+      BuildContext context, User user, String role) async {
+    DocumentSnapshot userDoc =
+        await _firestore.collection('users').doc(user.uid).get();
+
+    String roleinData = userDoc['role'];
+
+    if (roleinData == 'Buyer' && role == "Buyer") {
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('buyerCollection')
+          .where('loginId', isEqualTo: userDoc['email'])
+          .get();
+      if (querySnapshot.docs.isNotEmpty) {
+        currdocid = querySnapshot.docs.first.id;
+      }
+      nextScreenReplace(context, BuyerHome());
+    } else if (roleinData == 'Seller' && role == "Seller") {
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('sellerCollection')
+          .where('loginId', isEqualTo: userDoc['email'])
+          .get();
+      if (querySnapshot.docs.isNotEmpty) {
+        currdocid = querySnapshot.docs.first.id;
+      }
+      nextScreenReplace(context, SellerHome());
+    } else if (roleinData == 'Admin' && role == "Admin") {
+      currdocid = "admin";
+      nextScreenReplace(context, AdminPage());
+    } else {
+      showSnackBar(context, Colors.red, "No user found with given role!");
     }
   }
 
@@ -140,7 +221,21 @@ class DatabaseService {
         "password": password,
         "image_url": imageUrl, // Add image URL to Firestore
       });
+      // try {
+      //   UserCredential userCredential =
+      //       await _auth.createUserWithEmailAndPassword(
+      //     email: username,
+      //     password: password,
+      //   );
 
+      //   // Store user role in Firestore
+      //   await _firestore.collection('users').doc(userCredential.user!.uid).set({
+      //     'email': userCredential.user!.email,
+      //     'role': RecOrWar, // or 'home' based on your categories
+      //   });
+      // } catch (e) {
+      //   print("Error creating user: $e");
+      // }
       print(
           "Congratulations! You've successfully registered as a Seller on Snack Shack!");
     } catch (e) {
