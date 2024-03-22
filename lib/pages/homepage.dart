@@ -25,7 +25,7 @@ class HomePage extends StatelessWidget {
         leading: Image.asset("lib/assets/logosmall.png"),
         title: Column(children: [
           Text(
-            "SnackShack",
+            "Snack Shack",
             style: TextStyle(
                 color: Colors.white, fontWeight: FontWeight.bold, fontSize: 30),
           ),
