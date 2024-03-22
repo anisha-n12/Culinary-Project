@@ -8,7 +8,8 @@ import 'package:culinary_project/pages/offergallery.dart';
 import 'package:culinary_project/pages/seller_reg.dart';
 import 'package:culinary_project/pages/user_home.dart';
 // import 'package:culinary_project/pages/upload_img.dart';
-// import 'package:culinary_project/services/database_service.dart';
+import 'package:culinary_project/service/database_service.dart';
+
 import 'package:culinary_project/shared/constants.dart';
 import 'package:culinary_project/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +49,11 @@ class HomePage extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    nextScreen(context, SellerPage());
+
+
+                    nextScreen(context, LoginPage());
+
+
                   },
                   style: buttonStyle,
                   child: const Text(

@@ -1,6 +1,7 @@
 import 'package:culinary_project/pages/homepage.dart';
 import 'package:culinary_project/pages/register_option.dart';
 import 'package:culinary_project/pages/sellerhome.dart';
+import 'package:culinary_project/service/database_service.dart';
 import 'package:culinary_project/shared/constants.dart';
 import 'package:culinary_project/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,10 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   String name = "";
+  String password = "";
   bool changebutton = false;
+  String dropdownValue = "";
+  String dropDownValue = "Select a role";
 
   moveToHome(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
@@ -33,6 +37,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -72,11 +77,51 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(
                   height: 20.0,
                 ),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 1.0),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: DropdownButton<String>(
+                    value: dropDownValue,
+                    icon: const Icon(Icons.arrow_drop_down),
+                    style: const TextStyle(color: Colors.black),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropDownValue = newValue!;
+                        print(dropDownValue);
+                      });
+                    },
+                    items: const [
+                      DropdownMenuItem<String>(
+                        value: "Select a role",
+                        child: Text("Select a role"),
+                      ),
+                      DropdownMenuItem<String>(
+                        value: "Seller",
+                        child: Text("Seller"),
+                      ),
+                      DropdownMenuItem<String>(
+                        value: "Buyer",
+                        child: Text("Buyer"),
+                      ),
+                      DropdownMenuItem<String>(
+                        value: "Admin",
+                        child: Text("Admin"),
+                      ),
+                    ],
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                       vertical: 16.0, horizontal: 32.0),
                   child: Column(
                     children: [
+                      const SizedBox(
+                        height: 10,
+                      ),
                       TextFormField(
                         decoration: textInputDecoration.copyWith(
                             labelText: "Enter your username",
@@ -97,6 +142,9 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       TextFormField(
                         obscureText: true,
+                        onChanged: (value) {
+                          password = value;
+                        },
                         validator: (value) {
                           if (value!.isEmpty) {
                             return "Please enter a Password!";
@@ -122,7 +170,9 @@ class _LoginPageState extends State<LoginPage> {
                   child: InkWell(
                     splashColor: Colors.grey,
                     onTap: () {
-                      nextScreenReplace(context, SellerHome());
+                      DatabaseService.signInUser(
+                          context, name, password, dropDownValue);
+                      // nextScreenReplace(context, SellerHome());
                     },
                     child: AnimatedContainer(
                       duration: const Duration(seconds: 1),

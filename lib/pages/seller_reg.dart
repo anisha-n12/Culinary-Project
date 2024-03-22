@@ -291,7 +291,7 @@ class _SellerRegistrationState extends State<SellerRegistration> {
                                   }
                                 },
                                 onChanged: (value) {
-                                  businessName = value;
+                                  description = value;
                                 },
                                 decoration: textInputDecoration.copyWith(
                                     labelText:
@@ -540,6 +540,7 @@ class _SellerRegistrationState extends State<SellerRegistration> {
                           if (_formKey.currentState!.validate() && _agreedTo) {
                             // Validation successful, navigate to home page
                             await _databaseService.addSeller(
+                              context,
                               fullName,
                               businessName,
                               description,
