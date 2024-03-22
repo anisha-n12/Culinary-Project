@@ -1,5 +1,6 @@
 import 'package:culinary_project/pages/homepage.dart';
 import 'package:culinary_project/pages/register_option.dart';
+import 'package:culinary_project/pages/sellerhome.dart';
 import 'package:culinary_project/shared/constants.dart';
 import 'package:culinary_project/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -120,7 +121,9 @@ class _LoginPageState extends State<LoginPage> {
                   borderRadius: BorderRadius.circular(changebutton ? 30 : 10),
                   child: InkWell(
                     splashColor: Colors.grey,
-                    onTap: () => moveToHome(context),
+                    onTap: () {
+                      nextScreenReplace(context, SellerHome());
+                    },
                     child: AnimatedContainer(
                       duration: const Duration(seconds: 1),
                       width: changebutton ? 50 : 100,

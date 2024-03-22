@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:culinary_project/shared/constants.dart';
+import 'package:culinary_project/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -14,7 +16,7 @@ class _AddProductState extends State<AddProduct> {
   List<String> _selectedCategories = [];
 
   Future<void> _pickImage() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final pickedFile = await picker.pickImage(source: ImageSource.camera);
 
     setState(() {
       if (pickedFile != null) {
@@ -29,7 +31,20 @@ class _AddProductState extends State<AddProduct> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Product'),
+        title: Text(
+          'Add Product',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+        backgroundColor: Constants.secondaryColor,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          color: Colors.black,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -37,33 +52,36 @@ class _AddProductState extends State<AddProduct> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              GestureDetector(
-                onTap: _pickImage,
-                child: Container(
-                  width: 150,
-                  height: 150,
-                  color: Colors.grey[200],
-                  child: _image != null
-                      ? Image.file(
-                          _image!,
-                          fit: BoxFit.cover,
-                        )
-                      : Icon(
-                          Icons.add_photo_alternate,
-                          size: 50,
-                        ),
+              const SizedBox(height: 10),
+              Center(
+                child: GestureDetector(
+                  onTap: _pickImage,
+                  child: Container(
+                    width: 150,
+                    height: 150,
+                    color: Colors.grey[200],
+                    child: _image != null
+                        ? Image.file(
+                            _image!,
+                            fit: BoxFit.cover,
+                          )
+                        : Icon(
+                            Icons.add_photo_alternate,
+                            size: 50,
+                          ),
+                  ),
                 ),
               ),
               SizedBox(height: 20),
               TextFormField(
-                decoration: InputDecoration(
+                decoration: textInputDecoration.copyWith(
                   labelText: 'Product Name',
                   hintText: 'Enter product name',
                 ),
               ),
               SizedBox(height: 20),
               TextFormField(
-                decoration: InputDecoration(
+                decoration: textInputDecoration.copyWith(
                   labelText: 'Description',
                   hintText: 'Enter description',
                 ),
@@ -71,7 +89,7 @@ class _AddProductState extends State<AddProduct> {
               ),
               SizedBox(height: 20),
               TextFormField(
-                decoration: InputDecoration(
+                decoration: textInputDecoration.copyWith(
                   labelText: 'Price',
                   hintText: 'Enter price in Indian rupees',
                 ),
@@ -79,7 +97,7 @@ class _AddProductState extends State<AddProduct> {
               ),
               SizedBox(height: 20),
               TextFormField(
-                decoration: InputDecoration(
+                decoration: textInputDecoration.copyWith(
                   labelText: 'Quantity',
                   hintText: 'Enter quantity',
                 ),
