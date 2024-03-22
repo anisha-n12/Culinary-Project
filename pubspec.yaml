@@ -36,6 +36,7 @@ dependencies:
   flutter:
     sdk: flutter
   lottie: ^3.1.0
+  carousel_slider: ^4.2.1
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -69,6 +70,10 @@ flutter:
     - lib\assets\Logo.png
     - lib\assets\logo2.png
     - lib\assets\logosmall.png
+    - lib\assets\name.png
+    - lib\assets\pickles_offer.png
+    - lib\assets\papad_offer.png
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

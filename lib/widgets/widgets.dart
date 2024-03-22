@@ -22,6 +22,34 @@ const buttonDecoration = BoxDecoration(
   borderRadius: BorderRadius.all(Radius.circular(8.0)),
 );
 
+var buttonStyle = ButtonStyle(
+  backgroundColor: MaterialStateProperty.all<Color>(Constants.secondaryColor),
+  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+    RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(8.0),
+    ),
+  ),
+  textStyle: MaterialStateProperty.all<TextStyle>(
+    TextStyle(
+      color: Colors.white,
+      fontWeight: FontWeight.bold,
+    ),
+  ),
+);
+
+var carouselDecoration = BoxDecoration(
+  gradient: LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [
+      Colors.transparent,
+      Colors.transparent,
+      Colors.transparent,
+      Colors.transparent,
+      Colors.black.withOpacity(0.6), // Adjust the opacity as needed
+    ],
+  ),
+);
 const textDecoration = TextStyle(
   color: Colors.white,
   fontSize: 16.0,
