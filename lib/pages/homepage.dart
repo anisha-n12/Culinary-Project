@@ -1,11 +1,14 @@
 import 'package:culinary_project/pages/AddProduct.dart';
+import 'package:culinary_project/pages/AdminDashboard.dart';
 import 'package:culinary_project/pages/AdminPage.dart';
 import 'package:culinary_project/pages/SellerPage.dart';
-import 'package:culinary_project/pages/SellerRegistration.dart';
+// import 'package:culinary_project/pages/SellerRegistration.dart';
 import 'package:culinary_project/pages/loginpage.dart';
 import 'package:culinary_project/pages/offergallery.dart';
+import 'package:culinary_project/pages/seller_reg.dart';
 // import 'package:culinary_project/pages/upload_img.dart';
 import 'package:culinary_project/service/database_service.dart';
+
 import 'package:culinary_project/shared/constants.dart';
 import 'package:culinary_project/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +48,9 @@ class HomePage extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
+
                     nextScreen(context, LoginPage());
+
                   },
                   style: buttonStyle,
                   child: const Text(

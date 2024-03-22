@@ -179,7 +179,9 @@ class DatabaseService {
     String city,
     String state,
     String pinCode,
-    File? imageFile, // Add image file parameter
+    File? imageFile,
+    String username,
+    String password,
   ) async {
     try {
       final CollectionReference sellerCollection =
@@ -190,6 +192,17 @@ class DatabaseService {
       if (imageFile != null) {
         imageUrl = await _uploadImageToStorage(imageFile);
       }
+
+      // Update the no_user field of Sales_Admin document by incrementing it by 1
+      await _firestore.runTransaction((transaction) async {
+        final DocumentReference adminDocRef =
+            _firestore.collection("Sales_Admin").doc();
+        final DocumentSnapshot adminSnapshot =
+            await transaction.get(adminDocRef);
+        final int currentNoUsers =
+            (adminSnapshot.data() as Map<String, dynamic>)['no_user'] ?? 0;
+        transaction.update(adminDocRef, {'no_user': currentNoUsers + 1});
+      });
 
       // Add seller information to Firestore
       await sellerCollection.add({
@@ -204,8 +217,8 @@ class DatabaseService {
         "city": city,
         "state": state,
         "pinCode": pinCode,
-        "loginID": "",
-        "password": "",
+        "loginID": username,
+        "password": password,
         "image_url": imageUrl, // Add image URL to Firestore
       });
       // try {
