@@ -133,7 +133,7 @@ class _BuyerRegistrationState extends State<BuyerRegistration> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 16),  //email
+                      const SizedBox(height: 16), //email
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 25.0),
                         child: Column(
@@ -152,7 +152,7 @@ class _BuyerRegistrationState extends State<BuyerRegistration> {
                         ),
                       ),
 
-                        const SizedBox(height: 16), //gender
+                      const SizedBox(height: 16), //gender
                       Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 25.0),
                           child: Column(
@@ -172,9 +172,8 @@ class _BuyerRegistrationState extends State<BuyerRegistration> {
                                       labelText: "Enter the Gender",
                                       hintText: "Gender"),
                                 ),
-                              ])
-                      ),
-                      
+                              ])),
+
                       const SizedBox(height: 16), //contact
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -182,7 +181,6 @@ class _BuyerRegistrationState extends State<BuyerRegistration> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             TextFormField(
-                              
                               onChanged: (value) {
                                 contactNumber = value;
                               },
@@ -202,8 +200,8 @@ class _BuyerRegistrationState extends State<BuyerRegistration> {
                           ],
                         ),
                       ),
-                      
-                      SizedBox(height: 16),  //building no.
+
+                      SizedBox(height: 16), //building no.
                       Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 25.0),
                           child: Column(
@@ -223,9 +221,7 @@ class _BuyerRegistrationState extends State<BuyerRegistration> {
                                       labelText: "Enter Building No.",
                                       hintText: "Building No."),
                                 ),
-                              ])
-                              
-                        ),
+                              ])),
 
                       SizedBox(height: 16), //district
                       Padding(
@@ -247,9 +243,8 @@ class _BuyerRegistrationState extends State<BuyerRegistration> {
                                       labelText: "Enter the district",
                                       hintText: "District"),
                                 ),
-                              ])
-                      ),
-                      
+                              ])),
+
                       SizedBox(height: 16), //city
                       Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -270,9 +265,8 @@ class _BuyerRegistrationState extends State<BuyerRegistration> {
                                       labelText: "Enter the City",
                                       hintText: "City"),
                                 ),
-                              ])
-                    ),
-                      
+                              ])),
+
                       SizedBox(height: 16), //state
                       Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -293,10 +287,8 @@ class _BuyerRegistrationState extends State<BuyerRegistration> {
                                       labelText: "Enter the state",
                                       hintText: "State"),
                                 ),
-                              ])
-                    ),
-                      
-                      
+                              ])),
+
                       SizedBox(height: 16), //pin
                       Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -319,9 +311,8 @@ class _BuyerRegistrationState extends State<BuyerRegistration> {
                                       labelText: "Enter the pincode",
                                       hintText: "Pincode"),
                                 ),
-                              ])
-                      ),
-                      
+                              ])),
+
                       SizedBox(height: 16), //username
                       Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -342,11 +333,9 @@ class _BuyerRegistrationState extends State<BuyerRegistration> {
                                       labelText: "Enter the username",
                                       hintText: "Username"),
                                 ),
-                              ])
-                    ),
-                      
+                              ])),
 
-                      const SizedBox(height: 16),   //create password
+                      const SizedBox(height: 16), //create password
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 25.0),
                         child: Column(
@@ -366,7 +355,7 @@ class _BuyerRegistrationState extends State<BuyerRegistration> {
                         ),
                       ),
 
-                      const SizedBox(height: 16),  //confirm password
+                      const SizedBox(height: 16), //confirm password
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 25.0),
                         child: Column(
@@ -392,11 +381,7 @@ class _BuyerRegistrationState extends State<BuyerRegistration> {
                           ],
                         ),
                       ),
-                      
-                      
-                      
-                    
-                      
+
                       const SizedBox(height: 16),
 
                       // Add a spacer
@@ -431,10 +416,21 @@ class _BuyerRegistrationState extends State<BuyerRegistration> {
                         onPressed: () {
                           if (_formKey.currentState!.validate() && _agreedTo) {
                             // Validation successful, navigate to home page
-
-                            showSnackBar(context, Colors.green,
-                                "Buyer registered successfully!");
-                            nextScreen(context, HomePage());
+                            DatabaseService.addBuyer(
+                                context,
+                                fullName,
+                                emailAddress,
+                                contactNumber,
+                                buildingNo,
+                                district,
+                                city,
+                                state,
+                                pincode,
+                                username,
+                                password);
+                            // showSnackBar(context, Colors.green,
+                            //     "Buyer registered successfully!");
+                            nextScreen(context, LoginPage());
                           }
                         },
                         style: ElevatedButton.styleFrom(
