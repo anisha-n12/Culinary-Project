@@ -1,4 +1,5 @@
 import 'package:culinary_project/pages/splash_scrn.dart';
+import 'package:culinary_project/service/database_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:culinary_project/shared/constants.dart';
 import 'package:flutter/foundation.dart';
