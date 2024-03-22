@@ -133,7 +133,8 @@ class _SellerRegistrationState extends State<SellerRegistration> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 16),
+
+                      const SizedBox(height: 16), //email
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 25.0),
                         child: Column(
@@ -152,7 +153,216 @@ class _SellerRegistrationState extends State<SellerRegistration> {
                         ),
                       ),
 
+                      const SizedBox(height: 16), //gender
+                      Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextFormField(
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Please enter the Gender';
+                                    }
+                                    return null;
+                                  },
+                                  onChanged: (value) {
+                                    gender = value;
+                                  },
+                                  decoration: textInputDecoration.copyWith(
+                                      labelText: "Enter the Gender",
+                                      hintText: "Gender"),
+                                ),
+                              ])),
+
+                      const SizedBox(height: 16), //contact
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextFormField(
+                              onChanged: (value) {
+                                contactNumber = value;
+                              },
+                              validator: (value) {
+                                if (value!.isEmpty ||
+                                    !RegExp(r'^(\+91[\s-]?)?(\d{10})$')
+                                        .hasMatch(value)) {
+                                  return 'Enter Correct Contact';
+                                } else {
+                                  return null;
+                                }
+                              },
+                              decoration: textInputDecoration.copyWith(
+                                  labelText: "Enter your Mobile no.",
+                                  hintText: "Contact details"),
+                            ),
+                          ],
+                        ),
+                      ),
+
                       const SizedBox(height: 16),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextFormField(
+                              validator: (value) {
+                                if (value!.isEmpty ||
+                                    !RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
+                                  return 'Enter Correct Name';
+                                } else {
+                                  return null;
+                                }
+                              },
+                              onChanged: (value) {
+                                businessName = value;
+                              },
+                              decoration: textInputDecoration.copyWith(
+                                  labelText: "Enter your Business Name",
+                                  hintText: "Business Name"),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      SizedBox(height: 16), //building no.
+                      Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextFormField(
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Please enter your Building/Block No.';
+                                    }
+                                    return null;
+                                  },
+                                  onChanged: (value) {
+                                    buildingNo = value;
+                                  },
+                                  decoration: textInputDecoration.copyWith(
+                                      labelText: "Enter Building No.",
+                                      hintText: "Building No."),
+                                ),
+                              ])),
+
+                      SizedBox(height: 16), //district
+                      Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextFormField(
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Please enter the district';
+                                    }
+                                    return null;
+                                  },
+                                  onChanged: (value) {
+                                    district = value;
+                                  },
+                                  decoration: textInputDecoration.copyWith(
+                                      labelText: "Enter the district",
+                                      hintText: "District"),
+                                ),
+                              ])),
+
+                      SizedBox(height: 16), //city
+                      Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextFormField(
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Please enter the city';
+                                    }
+                                    return null;
+                                  },
+                                  onChanged: (value) {
+                                    city = value;
+                                  },
+                                  decoration: textInputDecoration.copyWith(
+                                      labelText: "Enter the City",
+                                      hintText: "City"),
+                                ),
+                              ])),
+
+                      SizedBox(height: 16), //state
+                      Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextFormField(
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Please enter the state';
+                                    }
+                                    return null;
+                                  },
+                                  onChanged: (value) {
+                                    state = value;
+                                  },
+                                  decoration: textInputDecoration.copyWith(
+                                      labelText: "Enter the state",
+                                      hintText: "State"),
+                                ),
+                              ])),
+
+                      SizedBox(height: 16), //pin
+                      Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextFormField(
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Please enter the pin code';
+                                    } else if (value.length != 6) {
+                                      return 'Pin code must have exactly 6 digits';
+                                    }
+                                    return null;
+                                  },
+                                  onChanged: (value) {
+                                    pincode = value;
+                                  },
+                                  decoration: textInputDecoration.copyWith(
+                                      labelText: "Enter the pincode",
+                                      hintText: "Pincode"),
+                                ),
+                              ])),
+
+                      SizedBox(height: 16), //username
+                      Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextFormField(
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Please enter the username';
+                                    }
+                                    return null;
+                                  },
+                                  onChanged: (value) {
+                                    username = value;
+                                  },
+                                  decoration: textInputDecoration.copyWith(
+                                      labelText: "Enter the username",
+                                      hintText: "Username"),
+                                ),
+                              ])),
+
+                      const SizedBox(height: 16), //create password
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 25.0),
                         child: Column(
@@ -172,7 +382,7 @@ class _SellerRegistrationState extends State<SellerRegistration> {
                         ),
                       ),
 
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 16), //confirm password
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 25.0),
                         child: Column(
@@ -198,149 +408,8 @@ class _SellerRegistrationState extends State<SellerRegistration> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 16),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            TextFormField(
-                              // validator: (value) {
-                              //   if (value!.isEmpty ||
-                              //       !RegExp(r'^\d{9}$').hasMatch(value)) {
-                              //     return 'Registration ID is of 9 digits';
-                              //   } else {
-                              //     return null;
-                              //   }
-                              // },
-                              onChanged: (value) {
-                                contactNumber = value;
-                              },
-                              validator: (value) {
-                                if (value!.isEmpty ||
-                                    !RegExp(r'^(\+91[\s-]?)?(\d{10})$')
-                                        .hasMatch(value)) {
-                                  return 'Enter Correct Contact';
-                                } else {
-                                  return null;
-                                }
-                              },
-                              decoration: textInputDecoration.copyWith(
-                                  labelText: "Enter your Mobile no.",
-                                  hintText: "Contact details"),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 16),
-                      Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextFormField(
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return 'Please enter your Building/Block No.';
-                                    }
-                                    return null;
-                                  },
-                                  onChanged: (value) {
-                                    buildingNo = value;
-                                  },
-                                  decoration: textInputDecoration.copyWith(
-                                      labelText: "Enter Building No.",
-                                      hintText: "Building No."),
-                                ),
-                              ])),
 
-                      SizedBox(height: 16),
-                      Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextFormField(
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return 'Please enter the district';
-                                    }
-                                    return null;
-                                  },
-                                  onChanged: (value) {
-                                    district = value;
-                                  },
-                                  decoration: textInputDecoration.copyWith(
-                                      labelText: "Enter the district",
-                                      hintText: "District"),
-                                ),
-                              ])),
-                      SizedBox(height: 16),
-                      Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextFormField(
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return 'Please enter the city';
-                                    }
-                                    return null;
-                                  },
-                                  onChanged: (value) {
-                                    city = value;
-                                  },
-                                  decoration: textInputDecoration.copyWith(
-                                      labelText: "Enter the City",
-                                      hintText: "City"),
-                                ),
-                              ])),
-                      SizedBox(height: 16),
-                      Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextFormField(
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return 'Please enter the pin code';
-                                    } else if (value.length != 6) {
-                                      return 'Pin code must have exactly 6 digits';
-                                    }
-                                    return null;
-                                  },
-                                  onChanged: (value) {
-                                    pincode = value;
-                                  },
-                                  decoration: textInputDecoration.copyWith(
-                                      labelText: "Enter the pincode",
-                                      hintText: "Pincode"),
-                                ),
-                              ])),
-                      const SizedBox(height: 16),
-                      Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextFormField(
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return 'Please enter the pin code';
-                                    }
-                                    return null;
-                                  },
-                                  onChanged: (value) {
-                                    gender = value;
-                                  },
-                                  decoration: textInputDecoration.copyWith(
-                                      labelText: "Enter the Gender",
-                                      hintText: "Gender"),
-                                ),
-                              ])),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 16), //category
 
                       Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -350,9 +419,7 @@ class _SellerRegistrationState extends State<SellerRegistration> {
                                 TextFormField(
                                   validator: (value) {
                                     if (value!.isEmpty) {
-                                      return 'Please enter the pin code';
-                                    } else if (value.length != 6) {
-                                      return 'Pin code must have exactly 6 digits';
+                                      return 'Please enter the business';
                                     }
                                     return null;
                                   },
@@ -365,6 +432,7 @@ class _SellerRegistrationState extends State<SellerRegistration> {
                                 ),
                               ])),
                       // Add a spacer
+
                       const SizedBox(width: 8),
 
                       Padding(
