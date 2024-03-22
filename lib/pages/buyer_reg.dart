@@ -10,6 +10,7 @@ class BuyerRegistration extends StatefulWidget {
 class _BuyerRegistrationState extends State<BuyerRegistration> {
   @override
   Widget build(BuildContext context) {
-    return Container(child: Center(child: Text("Buyer")));
+    return Scaffold(
+        body: Container(child: Center(child: Text("Buyer registration"))));
   }
 }

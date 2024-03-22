@@ -42,7 +42,7 @@ class _RegisterOptionsState extends State<RegisterOptions> {
               child: InkWell(
                 splashColor: Colors.blue.withAlpha(30),
                 onTap: () {
-                  nextScreen(context, SellerRegistration());
+                  nextScreen(context, BuyerRegistration());
                 },
                 child: Column(children: [
                   Image.asset(
@@ -68,7 +68,7 @@ class _RegisterOptionsState extends State<RegisterOptions> {
               child: InkWell(
                 splashColor: Colors.blue.withAlpha(30),
                 onTap: () {
-                  nextScreen(context, BuyerRegistration());
+                  nextScreen(context, SellerRegistration());
                 },
                 child: Column(children: [
                   Image.asset(
