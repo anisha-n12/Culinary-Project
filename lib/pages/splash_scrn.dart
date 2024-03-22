@@ -46,6 +46,13 @@ class _SplashScrnState extends State<SplashScrn> {
                             alignment: Alignment.topCenter))),
                 const SizedBox(height: 4),
                 Container(
+                    height: 250,
+                    width: 300,
+                    child: Center(
+                        child: Image.asset("lib/assets/name.png",
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.topCenter))),
+                Container(
                     color: Colors.white,
                     child: const Row(children: [
                       SizedBox(width: 30),
