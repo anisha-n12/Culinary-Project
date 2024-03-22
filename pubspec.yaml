@@ -37,6 +37,7 @@ dependencies:
     sdk: flutter
   lottie: ^3.1.0
   carousel_slider: ^4.2.1
+  email_validator: ^2.1.17
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -73,6 +74,11 @@ flutter:
     - lib\assets\name.png
     - lib\assets\pickles_offer.png
     - lib\assets\papad_offer.png
+    - lib\assets\snacks_offer.png
+    - lib\assets\masala_offer.png
+    - lib\assets\login.png
+    - lib\assets\buyer_reg.png
+    - lib\assets\seller_reg.png
 
   #   - images/a_dot_ham.jpeg
 
