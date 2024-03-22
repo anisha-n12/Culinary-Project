@@ -4,6 +4,53 @@ import 'dart:io';
 
 class DatabaseService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<void> addProduct(
+    String productName,
+    String imageUrl,
+    String description,
+    String sellerId,
+    double price,
+    int quantity,
+  ) async {
+    try {
+      final CollectionReference productCollection =
+          _firestore.collection("productCollection");
+
+      // Start a Firestore transaction
+      await _firestore.runTransaction((transaction) async {
+        // Get the document reference for the Sales_Admin document
+        final DocumentReference adminDocRef = _firestore
+            .collection("Sales_Admin")
+            .doc(); // No document ID provided
+
+        // Get the current value of no_product field
+        final DocumentSnapshot adminSnapshot =
+            await transaction.get(adminDocRef);
+        final int currentNoProducts =
+            (adminSnapshot.data() as Map<String, dynamic>)['no_product'] ?? 0;
+
+        // Update the no_product field by incrementing it by 1
+        transaction.update(adminDocRef, {'no_product': currentNoProducts + 1});
+
+        // Add product information to Firestore
+        await productCollection.add({
+          "productName": productName,
+          "imageUrl": imageUrl,
+          "description": description,
+          "sellerId": sellerId,
+          "price": price,
+          "quantity": quantity,
+        });
+      });
+
+      print("Product added successfully!");
+    } catch (e) {
+      print("There was an issue adding the product: $e");
+      // Handle the error as needed
+    }
+  }
+
   Future<void> addBuyer(
     String name,
     String email,
