@@ -5,6 +5,10 @@ import 'package:culinary_project/pages/loginpage.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:culinary_project/service/database_service.dart';
 import 'package:culinary_project/widgets/widgets.dart';
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class SellerRegistration extends StatefulWidget {
   const SellerRegistration({super.key});
@@ -14,6 +18,23 @@ class SellerRegistration extends StatefulWidget {
 }
 
 class _SellerRegistrationState extends State<SellerRegistration> {
+  File? _image;
+  final DatabaseService _databaseService = DatabaseService();
+  final picker = ImagePicker(); // Image picker instance
+  List<String> _selectedCategories = [];
+
+  Future<void> _pickImage() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
   // String programDropDown = "Select your Program";
   String categoryDropDown = "Select your category";
   // String yearDropDown = "Select your year";
@@ -101,11 +122,11 @@ class _SellerRegistrationState extends State<SellerRegistration> {
 
                       const SizedBox(height: 15),
 
-                      const Icon(
-                        Icons.person_rounded,
-                        color: Constants.secondaryColor,
-                        size: 100,
-                      ),
+                      // const Icon(
+                      //   Icons.person_rounded,
+                      //   color: Constants.secondaryColor,
+                      //   size: 100,
+                      // ),
 
                       //register info
                       //name
@@ -114,6 +135,30 @@ class _SellerRegistrationState extends State<SellerRegistration> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            Center(
+                              child: GestureDetector(
+                                onTap: _pickImage,
+                                child: Container(
+                                  width: 150,
+                                  height: 150,
+                                  decoration: BoxDecoration(
+                                    color: Color.fromARGB(255, 0, 163, 146),
+                                    borderRadius: BorderRadius.circular(
+                                        10), // Add border radius here
+                                  ),
+                                  child: _image != null
+                                      ? Image.file(
+                                          _image!,
+                                          fit: BoxFit.cover,
+                                        )
+                                      : Icon(
+                                          Icons.add_photo_alternate,
+                                          size: 50,
+                                        ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
                             TextFormField(
                               validator: (value) {
                                 if (value!.isEmpty ||
@@ -461,12 +506,28 @@ class _SellerRegistrationState extends State<SellerRegistration> {
                       ),
                       const SizedBox(height: 19),
                       ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
                           if (_formKey.currentState!.validate() && _agreedTo) {
                             // Validation successful, navigate to home page
+                            await _databaseService.addSeller(
+                              fullName,
+                              businessName,
+                              description,
+                              category,
+                              emailAddress,
+                              contactNumber,
+                              buildingNo,
+                              district,
+                              city,
+                              state,
+                              pincode,
+                              _image, // Pass the picked image file
+                              username,
+                              password,
+                            );
 
                             showSnackBar(context, Colors.green,
-                                "Student registered successfully!");
+                                "Congratulations! You've successfully registered as a Seller on Snack Shack!");
                             nextScreen(context, HomePage());
                           }
                         },
