@@ -48,7 +48,7 @@ class HomePage extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    nextScreen(context, UserHome());
+                    nextScreen(context, SellerPage());
                   },
                   style: buttonStyle,
                   child: const Text(
