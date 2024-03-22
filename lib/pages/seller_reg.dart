@@ -228,6 +228,36 @@ class _SellerRegistrationState extends State<SellerRegistration> {
                         ),
                       ),
 
+                      const SizedBox(height: 16),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              height: 100,
+                              child: TextFormField(
+                                maxLines: 10,
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Enter Business Description';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                onChanged: (value) {
+                                  businessName = value;
+                                },
+                                decoration: textInputDecoration.copyWith(
+                                    labelText:
+                                        "Enter your Business Description",
+                                    hintText: "Business Description"),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
                       SizedBox(height: 16), //building no.
                       Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 25.0),
