@@ -1,4 +1,6 @@
 import 'package:culinary_project/pages/AddProduct.dart';
+import 'package:culinary_project/pages/buyerprofile.dart';
+import 'package:culinary_project/pages/homepage.dart';
 import 'package:culinary_project/pages/offergallery.dart';
 import 'package:culinary_project/service/database_service.dart';
 import 'package:culinary_project/shared/constants.dart';
@@ -66,7 +68,7 @@ class BuyerHome extends StatelessWidget {
               height: 15,
             ),
             Text(
-              DatabaseService.currusername,
+              DatabaseService.userdata!['name'],
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
@@ -81,7 +83,9 @@ class BuyerHome extends StatelessWidget {
               height: 2,
             ),
             ListTile(
-              onTap: () {},
+              onTap: () {
+                nextScreen(context, BuyerProfile());
+              },
               selectedColor: primaryColor,
               selected: true,
               contentPadding:
@@ -168,6 +172,8 @@ class BuyerHome extends StatelessWidget {
                         IconButton(
                           onPressed: () async {
                             // Perform logout action here
+                            DatabaseService.signOutAndReset();
+                            nextScreenReplace(context, HomePage());
                           },
                           icon: Icon(Icons.done),
                           color: Colors.green,

@@ -15,6 +15,9 @@ class DatabaseService {
   static String currusername = "";
   static String currpassword = "";
   static String currdocid = "";
+  static String currRole = "";
+
+  static QueryDocumentSnapshot<Map<String, dynamic>>? userdata;
 
   static Future<void> addProduct(
     BuildContext context,
@@ -24,7 +27,7 @@ class DatabaseService {
     String sellerId,
     String price,
     String quantity,
-    List<String> categories, // Add list of categories parameter
+    List<String> categories,
   ) async {
     try {
       final CollectionReference productCollection =
@@ -33,15 +36,46 @@ class DatabaseService {
       if (imagefile != null) {
         imageUrl = await _uploadImageToStorage(imagefile);
       }
-      await productCollection.add({
+
+      // Add product to product collection
+      DocumentReference productDocRef = await productCollection.add({
         "productName": productName,
         "imageUrl": imageUrl,
         "description": description,
         "sellerId": sellerId,
         "price": price,
         "quantity": quantity,
-        "categories": categories, // Add categories to the product data
+        // "categories": categories,
       });
+
+      // Add sellerId to each category document
+      final CollectionReference categoriesCollection =
+          _firestore.collection("categories");
+      for (String category in categories) {
+        QuerySnapshot categoryQuerySnapshot = await categoriesCollection
+            .where("categoryName", isEqualTo: category)
+            .get();
+
+        if (categoryQuerySnapshot.docs.isEmpty) {
+          // Category document doesn't exist, create it
+          await categoriesCollection.add({
+            "categoryName": category,
+            "sellerIds": [sellerId],
+          });
+        } else {
+          // Category document exists, update it
+          DocumentSnapshot categoryDocSnapshot =
+              categoryQuerySnapshot.docs.first;
+          List<dynamic> sellerIds = categoryDocSnapshot.get("sellerIds");
+          if (!sellerIds.contains(sellerId)) {
+            sellerIds.add(sellerId);
+            await categoriesCollection.doc(categoryDocSnapshot.id).update({
+              "sellerIds": sellerIds,
+            });
+          }
+        }
+      }
+
       showSnackBar(context, Colors.green, "Product added successfully!");
       nextScreen(context, SellerHome());
     } catch (e) {
@@ -106,6 +140,39 @@ class DatabaseService {
     }
   }
 
+  static Future<void> getCurrentUserData(String role) async {
+    try {
+      User? user = _auth.currentUser;
+      QuerySnapshot<Map<String, dynamic>> querySnapshot;
+      if (role == "Buyer") {
+        querySnapshot = await _firestore
+            .collection('buyerCollection')
+            .where('loginID', isEqualTo: user!.email)
+            .get();
+      } else if (role == "Seller") {
+        querySnapshot = await _firestore
+            .collection('sellerCollection')
+            .where('loginID', isEqualTo: user!.email)
+            .get();
+      } else {
+        querySnapshot = await _firestore
+            .collection('sellerCollection')
+            .where('loginID', isEqualTo: user!.email)
+            .get();
+      }
+      if (querySnapshot.docs.isNotEmpty) {
+        // Retrieve the first document (assuming email is unique)
+        userdata = querySnapshot.docs.first;
+
+        // User data found in Firestore
+        // return userData.data();
+      }
+    } catch (e) {
+      print('Error getting current user data: $e');
+      return null;
+    }
+  }
+
   static Future<void> signInUser(
       BuildContext context, String email, String password, String role) async {
     try {
@@ -113,9 +180,11 @@ class DatabaseService {
         email: email,
         password: password,
       );
+
+      _redirectUser(context, userCredential.user!, role);
       currusername = email;
       currpassword = password;
-      _redirectUser(context, userCredential.user!, role);
+      getCurrentUserData(role);
       showSnackBar(context, Colors.green, "Logged in successfully...");
     } on FirebaseAuthException catch (e) {
       print("Error signing in: $e");
@@ -123,6 +192,14 @@ class DatabaseService {
       showSnackBar(context, Colors.red, "Incorrect email or password...");
       // }
     }
+  }
+
+  static Future<void> signOutAndReset() async {
+    await _auth.signOut(); // Sign out from Firebase Authentication
+    currusername = ""; // Reset username
+    currpassword = "";
+    currdocid = "";
+    currRole = "";
   }
 
   static void _redirectUser(
@@ -139,6 +216,7 @@ class DatabaseService {
           .get();
       if (querySnapshot.docs.isNotEmpty) {
         currdocid = querySnapshot.docs.first.id;
+        currRole = role;
       }
       nextScreenReplace(context, BuyerHome());
     } else if (roleinData == 'Seller' && role == "Seller") {

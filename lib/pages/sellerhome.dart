@@ -1,5 +1,7 @@
 import 'package:culinary_project/pages/AddProduct.dart';
+import 'package:culinary_project/pages/homepage.dart';
 import 'package:culinary_project/pages/offergallery.dart';
+import 'package:culinary_project/service/database_service.dart';
 import 'package:culinary_project/shared/constants.dart';
 import 'package:culinary_project/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -65,7 +67,7 @@ class SellerHome extends StatelessWidget {
               height: 15,
             ),
             Text(
-              "Username",
+              DatabaseService.userdata!['name'],
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
@@ -166,6 +168,8 @@ class SellerHome extends StatelessWidget {
                         ),
                         IconButton(
                           onPressed: () async {
+                            DatabaseService.signOutAndReset();
+                            nextScreenReplace(context, HomePage());
                             // Perform logout action here
                           },
                           icon: Icon(Icons.done),
