@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:culinary_project/pages/AddProduct.dart';
 import 'package:culinary_project/pages/ProductDetail.dart';
+import 'package:culinary_project/pages/buyerOrder.dart';
 import 'package:culinary_project/pages/buyerprofile.dart';
 // import 'package:culinary_project/pages/cart.dart';
 import 'package:culinary_project/pages/homepage.dart';
@@ -9,7 +10,7 @@ import 'package:culinary_project/service/database_service.dart';
 import 'package:culinary_project/shared/constants.dart';
 import 'package:culinary_project/widgets/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:badges/badges.dart';
+// import 'package:badges/badges.dart';
 
 class BuyerHome extends StatelessWidget {
   static const primaryColor = Color.fromARGB(255, 0, 163, 146);
@@ -219,7 +220,8 @@ class BuyerHome extends StatelessWidget {
             ),
             ListTile(
               onTap: () {
-                nextScreen(context, AddProduct());
+                nextScreen(context,
+                    OrderDetailsScreen(buyerId: DatabaseService.currdocid));
               },
               selectedColor: primaryColor,
               selected: false,
@@ -230,42 +232,9 @@ class BuyerHome extends StatelessWidget {
                 color: Colors.white,
               ),
               title: const Text(
-                "Add Product",
+                "My Orders",
                 style: TextStyle(color: Colors.white),
               ),
-            ),
-            ListTile(
-              onTap: () {},
-              selectedColor: primaryColor,
-              selected: false,
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              leading: const Icon(
-                Icons.shopping_cart,
-                color: Colors.white,
-              ),
-              title: const Text(
-                "Product Management",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-            ListTile(
-              onTap: () {},
-              selectedColor: primaryColor,
-              selected: false,
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              leading: const Icon(
-                Icons.shopping_bag,
-                color: Colors.white,
-              ),
-              title: const Text(
-                "Order Management",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-            const Divider(
-              height: 2,
             ),
             ListTile(
               tileColor: Color.fromARGB(255, 14, 14, 14),

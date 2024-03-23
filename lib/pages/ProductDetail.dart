@@ -1,3 +1,5 @@
+import 'package:culinary_project/pages/ProductOrder.dart';
+import 'package:culinary_project/service/database_service.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:culinary_project/shared/constants.dart';
@@ -15,6 +17,7 @@ class ProductDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String buyerId;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Constants.secondaryColor,
@@ -41,7 +44,7 @@ class ProductDetail extends StatelessWidget {
                   : (productData['price'] ?? 0).toDouble();
               var quantity = productData['quantity'] ?? '';
               var rating = productData['rating'] ?? 0;
-              var category = productData['category'] ?? '';
+              // var category = productData['category'] ?? '';
 
               return Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -83,11 +86,11 @@ class ProductDetail extends StatelessWidget {
                       'Rating: $rating',
                       style: TextStyle(fontSize: 18.0),
                     ),
-                    SizedBox(height: 8.0),
-                    Text(
-                      'Category: $category',
-                      style: TextStyle(fontSize: 18.0),
-                    ),
+                    // SizedBox(height: 8.0),
+                    // Text(
+                    //   'Category: $category',
+                    //   style: TextStyle(fontSize: 18.0),
+                    // ),
                     SizedBox(height: 16.0),
                     FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
                       future: FirebaseFirestore.instance
@@ -142,7 +145,14 @@ class ProductDetail extends StatelessWidget {
                                     children: [
                                       ElevatedButton(
                                         onPressed: () {
-                                          // Add logic to handle ordering
+                                          nextScreenReplace(
+                                            context,
+                                            ProductOrder(
+                                              buyerId:
+                                                  DatabaseService.currdocid,
+                                              productId: productId,
+                                            ),
+                                          );
                                         },
                                         style: ElevatedButton.styleFrom(
                                           primary: Constants.secondaryColor,
@@ -161,8 +171,34 @@ class ProductDetail extends StatelessWidget {
                                       ),
                                       SizedBox(width: 8.0),
                                       ElevatedButton.icon(
-                                        onPressed: () {
-                                          // Add logic to handle adding to cart
+                                        onPressed: () async {
+                                          try {
+                                            String buyerId = DatabaseService
+                                                .currdocid; // Replace with actual buyerId
+                                            CollectionReference cartRef =
+                                                FirebaseFirestore.instance
+                                                    .collection(
+                                                        'buyerCollection')
+                                                    .doc(buyerId)
+                                                    .collection('Cart');
+
+                                            await cartRef.doc(productId).set({
+                                              'productId': productId,
+                                              // Add more fields if needed
+                                            });
+
+                                            // Show a snackbar to indicate that the product has been added to cart
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                              content:
+                                                  Text('Product added to cart'),
+                                              duration: Duration(seconds: 2),
+                                            ));
+                                          } catch (error) {
+                                            print(
+                                                'Error adding product to cart: $error');
+                                            // Handle error as needed
+                                          }
                                         },
                                         style: ElevatedButton.styleFrom(
                                           primary: Constants.secondaryColor,

@@ -3,7 +3,6 @@ import 'package:culinary_project/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:culinary_project/shared/constants.dart';
-// import 'user_management.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:culinary_project/shared/constants.dart';
