@@ -1,3 +1,5 @@
+import 'package:culinary_project/pages/user_manage.dart';
+import 'package:culinary_project/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 class AdminPage extends StatelessWidget {
@@ -70,7 +72,9 @@ class AdminPage extends StatelessWidget {
               ),
             ),
             ListTile(
-              onTap: () {},
+              onTap: () {
+                nextScreenReplace(context, SellerCollectionScreen());
+              },
               selectedColor: primaryColor,
               selected: false,
               contentPadding:
@@ -80,12 +84,14 @@ class AdminPage extends StatelessWidget {
                 color: Colors.white,
               ),
               title: const Text(
-                "User Management",
+                "Seller Management",
                 style: TextStyle(color: Colors.white),
               ),
             ),
             ListTile(
-              onTap: () {},
+              onTap: () {
+                // nextScreenReplace(context, ProductCollectionScreen();)
+              },
               selectedColor: primaryColor,
               selected: false,
               contentPadding:
