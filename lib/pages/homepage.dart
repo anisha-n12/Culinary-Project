@@ -192,6 +192,7 @@
 import 'package:culinary_project/pages/AdminPage.dart';
 import 'package:culinary_project/pages/loginpage.dart';
 import 'package:culinary_project/pages/offergallery.dart';
+import 'package:culinary_project/pages/user_home.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:culinary_project/service/database_service.dart';
@@ -199,8 +200,28 @@ import 'package:culinary_project/shared/constants.dart';
 import 'package:culinary_project/widgets/widgets.dart';
 import 'package:culinary_project/pages/ProductDetail.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 0;
+
+  List<Widget> _pages = <Widget>[
+    HomeInfo(),
+    UserHome(),
+    CategoryPage(),
+    // AboutPage(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -224,6 +245,30 @@ class HomePage extends StatelessWidget {
           ],
         ),
         toolbarHeight: 80,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        selectedFontSize: 15,
+        selectedIconTheme: const IconThemeData(color: Colors.black, size: 30),
+        selectedItemColor: Colors.black,
+        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
+        currentIndex: _selectedIndex, //New
+        onTap: _onItemTapped,
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Constants.primaryColor,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.category),
+            label: 'Categories',
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -249,106 +294,233 @@ class HomePage extends StatelessWidget {
                 ),
               ],
             ),
+
+            _pages.elementAt(_selectedIndex),
             // Offer Gallery
-            OfferGallery(),
-            // GUI of UserHome
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                future:
-                    DatabaseService().retrieveCollection('productcollection'),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  } else {
-                    List<QueryDocumentSnapshot<Map<String, dynamic>>> products =
-                        snapshot.data!.docs;
+            // OfferGallery(),
+            // // GUI of UserHome
+            // Padding(
+            //   padding: const EdgeInsets.all(16.0),
+            //   child: FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
+            //     future:
+            //         DatabaseService().retrieveCollection('productcollection'),
+            //     builder: (context, snapshot) {
+            //       if (snapshot.connectionState == ConnectionState.waiting) {
+            //         return Center(child: CircularProgressIndicator());
+            //       } else if (snapshot.hasError) {
+            //         return Center(child: Text('Error: ${snapshot.error}'));
+            //       } else {
+            //         List<QueryDocumentSnapshot<Map<String, dynamic>>> products =
+            //             snapshot.data!.docs;
 
-                    return GridView.builder(
-                      shrinkWrap: true,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 16.0,
-                        mainAxisSpacing: 16.0,
-                        childAspectRatio: 0.75,
-                      ),
-                      itemCount: products.length,
-                      itemBuilder: (context, index) {
-                        final productData = products[index].data();
-                        final imageUrl = productData['imageurl'] ?? '';
-                        final productName =
-                            productData['productname'] ?? 'Unknown';
-                        final price = productData['price'] is String
-                            ? double.tryParse(productData['price']) ?? 0
-                            : (productData['price'] ?? 0).toDouble();
-                        final productId = products[index].id;
-                        final sellerId = productData['sellerid'];
+            //         return GridView.builder(
+            //           shrinkWrap: true,
+            //           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            //             crossAxisCount: 2,
+            //             crossAxisSpacing: 16.0,
+            //             mainAxisSpacing: 16.0,
+            //             childAspectRatio: 0.75,
+            //           ),
+            //           itemCount: products.length,
+            //           itemBuilder: (context, index) {
+            //             final productData = products[index].data();
+            //             final imageUrl = productData['imageurl'] ?? '';
+            //             final productName =
+            //                 productData['productname'] ?? 'Unknown';
+            //             final price = productData['price'] is String
+            //                 ? double.tryParse(productData['price']) ?? 0
+            //                 : (productData['price'] ?? 0).toDouble();
+            //             final productId = products[index].id;
+            //             final sellerId = productData['sellerid'];
 
-                        return GestureDetector(
-                          onTap: () async {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ProductDetail(
-                                  productId: productId,
-                                  sellerId: sellerId,
-                                ),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12.0),
-                              border: Border.all(color: Colors.grey[300]!),
-                            ),
-                            child: Card(
-                              elevation: 0,
-                              margin: EdgeInsets.zero,
-                              clipBehavior: Clip.antiAlias,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: imageUrl.isNotEmpty
-                                        ? Image.network(
-                                            imageUrl,
-                                            fit: BoxFit.cover,
-                                          )
-                                        : Center(child: Text('No Image')),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      productName,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
-                                    child: Text('\Rs.${price.toString()}'),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  }
-                },
-              ),
-            ),
+            //             return GestureDetector(
+            //               onTap: () async {
+            //                 Navigator.push(
+            //                   context,
+            //                   MaterialPageRoute(
+            //                     builder: (context) => ProductDetail(
+            //                       productId: productId,
+            //                       sellerId: sellerId,
+            //                     ),
+            //                   ),
+            //                 );
+            //               },
+            //               child: Container(
+            //                 decoration: BoxDecoration(
+            //                   color: Colors.white,
+            //                   borderRadius: BorderRadius.circular(12.0),
+            //                   border: Border.all(color: Colors.grey[300]!),
+            //                 ),
+            //                 child: Card(
+            //                   elevation: 0,
+            //                   margin: EdgeInsets.zero,
+            //                   clipBehavior: Clip.antiAlias,
+            //                   shape: RoundedRectangleBorder(
+            //                     borderRadius: BorderRadius.circular(12.0),
+            //                   ),
+            //                   child: Column(
+            //                     crossAxisAlignment: CrossAxisAlignment.start,
+            //                     children: [
+            //                       Expanded(
+            //                         child: imageUrl.isNotEmpty
+            //                             ? Image.network(
+            //                                 imageUrl,
+            //                                 fit: BoxFit.cover,
+            //                               )
+            //                             : Center(child: Text('No Image')),
+            //                       ),
+            //                       Padding(
+            //                         padding: const EdgeInsets.all(8.0),
+            //                         child: Text(
+            //                           productName,
+            //                           style: TextStyle(
+            //                               fontWeight: FontWeight.bold),
+            //                         ),
+            //                       ),
+            //                       Padding(
+            //                         padding: const EdgeInsets.symmetric(
+            //                             horizontal: 8.0),
+            //                         child: Text('\Rs.${price.toString()}'),
+            //                       ),
+            //                     ],
+            //                   ),
+            //                 ),
+            //               ),
+            //             );
+            //           },
+            //         );
+            //       }
+            //     },
+            //   ),
+            // ),
           ],
         ),
       ),
     );
+  }
+}
+
+class HomeInfo extends StatelessWidget {
+  const HomeInfo({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        child: Column(
+      children: [
+        OfferGallery(),
+        // GUI of UserHome
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
+            future: DatabaseService().retrieveCollection('productcollection'),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else {
+                List<QueryDocumentSnapshot<Map<String, dynamic>>> products =
+                    snapshot.data!.docs;
+
+                return GridView.builder(
+                  shrinkWrap: true,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16.0,
+                    mainAxisSpacing: 16.0,
+                    childAspectRatio: 0.75,
+                  ),
+                  itemCount: products.length,
+                  itemBuilder: (context, index) {
+                    final productData = products[index].data();
+                    final imageUrl = productData['imageurl'] ?? '';
+                    final productName = productData['productname'] ?? 'Unknown';
+                    final price = productData['price'] is String
+                        ? double.tryParse(productData['price']) ?? 0
+                        : (productData['price'] ?? 0).toDouble();
+                    final productId = products[index].id;
+                    final sellerId = productData['sellerid'];
+
+                    return GestureDetector(
+                      onTap: () async {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProductDetail(
+                              productId: productId,
+                              sellerId: sellerId,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12.0),
+                          border: Border.all(color: Colors.grey[300]!),
+                        ),
+                        child: Card(
+                          elevation: 0,
+                          margin: EdgeInsets.zero,
+                          clipBehavior: Clip.antiAlias,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: imageUrl.isNotEmpty
+                                    ? Image.network(
+                                        imageUrl,
+                                        fit: BoxFit.cover,
+                                      )
+                                    : Center(child: Text('No Image')),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  productName,
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Text('\Rs.${price.toString()}'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              }
+            },
+          ),
+        ),
+      ],
+    ));
+  }
+}
+
+class SearchPage extends StatelessWidget {
+  const SearchPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+
+class CategoryPage extends StatelessWidget {
+  const CategoryPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }

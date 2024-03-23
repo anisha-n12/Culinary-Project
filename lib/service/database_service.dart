@@ -173,6 +173,21 @@ class DatabaseService {
     }
   }
 
+  static Future<QuerySnapshot> fetchsellerOrders(String currdocid) async {
+    try {
+      final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('Order')
+          .where('productId.sellerId', isEqualTo: currdocid)
+          .get();
+
+      return querySnapshot;
+    } catch (e) {
+      // Handle any errors
+      print('Error fetching orders: $e');
+      throw e; // Rethrow the error to be handled by the caller
+    }
+  }
+
   static Future<void> signInUser(
       BuildContext context, String email, String password, String role) async {
     try {
@@ -192,6 +207,51 @@ class DatabaseService {
       showSnackBar(context, Colors.red, "Incorrect email or password...");
       // }
     }
+  }
+
+  static Future<List<Map<String, dynamic>>> fetchBuyerAndProductDetails(
+      QuerySnapshot ordersSnapshot) async {
+    List<Map<String, dynamic>> detailsList = [];
+
+    try {
+      for (DocumentSnapshot orderDoc in ordersSnapshot.docs) {
+        final String buyerId = orderDoc['buyerId'];
+        final String productId = orderDoc['productId'];
+
+        // Fetch buyer details
+        final DocumentSnapshot buyerDoc = await FirebaseFirestore.instance
+            .collection('buyerCollection')
+            .doc(buyerId)
+            .get();
+        if (buyerDoc.exists) {
+          final Map<String, dynamic> buyerDetails =
+              buyerDoc.data() as Map<String, dynamic>;
+          // Fetch product details
+          final DocumentSnapshot productDoc = await FirebaseFirestore.instance
+              .collection('productCollection')
+              .doc(productId)
+              .get();
+          if (productDoc.exists) {
+            final Map<String, dynamic> productDetails =
+                productDoc.data() as Map<String, dynamic>;
+            // Add buyer and product details to the list
+            detailsList.add({
+              'buyer': buyerDetails,
+              'product': productDetails,
+            });
+          } else {
+            print('Product document not found for ID: $productId');
+          }
+        } else {
+          print('Buyer document not found for ID: $buyerId');
+        }
+      }
+    } catch (e) {
+      // Handle any errors
+      print('Error fetching buyer and product details: $e');
+    }
+
+    return detailsList;
   }
 
   static Future<void> signOutAndReset() async {
@@ -334,4 +394,9 @@ class DatabaseService {
       throw e; // Rethrow the exception to handle it elsewhere if needed
     }
   }
+
+  static fetchProductsBySellerId(String currdocid) {}
+}
+
+class SellerHome {
 }
