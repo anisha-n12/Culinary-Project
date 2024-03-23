@@ -42,19 +42,20 @@ var carouselDecoration = BoxDecoration(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
     colors: [
+      // Colors.transparent,
+      // Colors.transparent,
+      // Colors.transparent,
       Colors.transparent,
-      Colors.transparent,
-      Colors.transparent,
-      Colors.transparent,
-      Colors.black.withOpacity(0.6), // Adjust the opacity as needed
+      Constants.secondaryColor.withOpacity(0.4), // Adjust the opacity as needed
     ],
   ),
+  borderRadius: BorderRadius.circular(12.0),
 );
 const textDecoration = TextStyle(
   color: Colors.white,
-  fontSize: 16.0,
+  fontSize: 25.0,
   fontFamily: 'Roboto', // You can change the font family as needed
-  fontWeight: FontWeight.normal, // You can adjust the font weight
+  fontWeight: FontWeight.bold, // You can adjust the font weight
 );
 
 const textDecorationmont = TextStyle(
@@ -84,4 +85,6 @@ void showSnackBar(context, color, message) {
       textColor: Colors.white,
     ),
   ));
+
+  
 }
