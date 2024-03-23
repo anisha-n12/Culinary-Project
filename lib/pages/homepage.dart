@@ -190,6 +190,7 @@
 //   }
 // }
 import 'package:culinary_project/pages/AdminPage.dart';
+import 'package:culinary_project/pages/loginpage.dart';
 import 'package:culinary_project/pages/offergallery.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -235,7 +236,7 @@ class HomePage extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () {
                     // Navigate to SellerPage
-                    nextScreen(context, AdminPage());
+                    nextScreen(context, LoginPage());
                   },
                   style: buttonStyle,
                   child: const Text(
