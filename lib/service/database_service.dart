@@ -306,6 +306,52 @@ class DatabaseService {
     }
   }
 
+  static Future<void> addProductOrder(
+      String buyerId, String productId, int quantity) async {
+    try {
+      CollectionReference orderRef =
+          FirebaseFirestore.instance.collection('Order');
+
+      await orderRef.add({
+        'buyerId': buyerId,
+        'productId': productId,
+        'quantity': quantity, // Include quantity in the document data
+        // Add more fields if needed
+      });
+
+      // Show a snackbar or other UI indication if needed
+    } catch (error) {
+      print('Error adding product order: $error');
+      // Handle error as needed
+    }
+  }
+
+  static Future<void> addToFavourites(
+      String productId, String currdocid) async {
+    try {
+      String buyerId = currdocid; // Replace with actual buyerId
+      CollectionReference favouritesRef = FirebaseFirestore.instance
+          .collection('buyerCollection')
+          .doc(buyerId)
+          .collection('Favourites');
+
+      await favouritesRef.doc(productId).set({
+        'productId': productId,
+        // Add more fields if needed
+      });
+
+      // Show a snackbar to indicate that the product has been added to favourites
+      // You may need to pass the context to this function if it's called from a widget
+      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      //   content: Text('Product added to favourites'),
+      //   duration: Duration(seconds: 2),
+      // ));
+    } catch (error) {
+      print('Error adding product to favourites: $error');
+      // Handle error as needed
+    }
+  }
+
   static Future<String> _uploadImageToStorage(File imageFile) async {
     try {
       Reference ref = FirebaseStorage.instance
