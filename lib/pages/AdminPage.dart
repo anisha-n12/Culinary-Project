@@ -84,12 +84,14 @@ class AdminPage extends StatelessWidget {
                 color: Colors.white,
               ),
               title: const Text(
-                "User Management",
+                "Seller Management",
                 style: TextStyle(color: Colors.white),
               ),
             ),
             ListTile(
-              onTap: () {},
+              onTap: () {
+                // nextScreenReplace(context, ProductCollectionScreen();)
+              },
               selectedColor: primaryColor,
               selected: false,
               contentPadding:

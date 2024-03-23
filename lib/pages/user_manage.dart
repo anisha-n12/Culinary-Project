@@ -25,9 +25,9 @@ class SellerCollectionScreen extends StatelessWidget {
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
                 var sellerData = snapshot.data!.docs[index].data();
-                var logoUrl = sellerData['logo_url'] ?? '';
+                var logoUrl = sellerData['image_url'] ?? '';
                 var businessName = sellerData['business_name'] ?? '';
-                var ownerName = sellerData['owner_name'] ?? '';
+                var ownerName = sellerData['name'] ?? '';
                 var description = sellerData['description'] ?? '';
 
                 return Padding(
